@@ -5,13 +5,13 @@ var logger = require("morgan");
 var mongoose = require("mongoose");
 
 //scraping tools go here, include Axios (promised-based http library, similar to Ajax)
-var Axios = require("axios");
+var axios = require("axios");
 var cheerio = require("cheerio");
 
 //require all models (database tables)
 var db = require("./models");
 
-var PORT = 3000;
+var PORT = 3000 = process.env.PORT || 3000;
 
 //initialize express
 var app = express();
@@ -31,7 +31,7 @@ app.use(express.static("public"));
 //mongoose.connect("mongodb://localhost/unit18Populater", { useNewUrlParser: true });
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/cheerio-app";
 
-mongoose.connect(MONGODB_URI);
+mongoose.connect(MONGODB_URI { useNewUrlParser: true});
 
 //routes
 
@@ -106,6 +106,16 @@ app.post("/articles/:id", function(req, res){
       .catch(function(err){
           res.json(err);
       });
+});
+
+app.get("/saved/:id", function(req, res) {
+    db.Article.findOneAndUpdate({ _id: req.params.id }, { saved: true }, { new: true })
+    .then(function(dbArticle){
+        res.render("index", {Articles: dbArticle});
+    })
+    .catch(function(err){
+        res.json(err);
+    });
 });
 
 //start the server
